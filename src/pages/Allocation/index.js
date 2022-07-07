@@ -25,11 +25,11 @@ const columns = [
     id: "professor",
     render: (professor) => professor?.department?.name,
   },
- // {
- //   value: "Course",
- //   id: "course",
- //   render: (course) => course?.name,
- // },
+ {
+    value: "Course",
+    id: "course",
+    render: (course) => course?.name,
+  },
 ];
 
 const daysOfWeek = [
@@ -88,6 +88,8 @@ const INITIAL_STATE = {
   
       setCourses(responseCourse.data);
       setProfessors(responseProfessor.data);
+
+      
     };
   
     useEffect(() => {
@@ -103,7 +105,7 @@ const INITIAL_STATE = {
           endHour,
           startHour,
           professor: { id: professorId },
-          department: { id: departmentId },
+         // department: { id: departmentId },
           course: { id: courseId },
         }) => {
           setAllocation({
@@ -112,7 +114,7 @@ const INITIAL_STATE = {
             endHour,
             startHour,
             professorId,
-            departmentId,
+           // departmentId,
             courseId,
           });
           setVisible(true);
@@ -136,13 +138,22 @@ const INITIAL_STATE = {
     ];
   
     const handleSave = async (refetch) => {
+      const data = {
+                  
+        courseId: allocation.id,
+        dayOfWeek: allocation.dayOfWeek,
+        endHour: allocation.endHour,
+        professorId: allocation.professor,
+        startHour: allocation.startHour,
+       
+      };
       try {
         if (allocation.id) {
-          await api.put(`${endpoint}/${allocation.id}`, Date);
+          await api.put(`${endpoint}/${allocation.id}`, data);
   
           toast.success("Atualizado com sucesso!");
         } else {
-          await api.post(endpoint, Date);
+          await api.post(endpoint, data);
   
           toast.success("Alocação cadastrada com sucesso!");
         }
@@ -203,7 +214,7 @@ const INITIAL_STATE = {
                     name="startHour"
                     onChange={onChange}
                     type="time"
-                    value={allocation.startHour}
+                    value={allocation.startHour.toString()}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -212,7 +223,7 @@ const INITIAL_STATE = {
                     name="endHour"
                     onChange={onChange}
                     type="time"
-                    value={allocation.endHour}
+                    value={allocation.endHour.toString()}
                   />
                 </Form.Group>
                 <Form.Group>
