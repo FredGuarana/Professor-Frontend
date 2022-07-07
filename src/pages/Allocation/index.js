@@ -140,11 +140,11 @@ const INITIAL_STATE = {
     const handleSave = async (refetch) => {
       const data = {
                   
-        courseId: allocation.id,
+        courseId: Number(allocation.courseId),
         dayOfWeek: allocation.dayOfWeek,
-        endHour: allocation.endHour,
-        professorId: allocation.professor,
-        startHour: allocation.startHour,
+        endHour: allocation.endHour + "+0000",
+        professorId: Number(allocation.professorId),
+        startHour: allocation.startHour + "+0000",
        
       };
       try {
