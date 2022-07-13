@@ -13,8 +13,8 @@ const endpoint = "/allocations";
 const columns = [
   { value: "ID", id: "id" },
   { value: "DayOfWeek", id: "dayOfWeek" },
-  { value: "EndHour", id: "endHour" },
   { value: "StartHour", id: "startHour" },
+  { value: "EndHour", id: "endHour" },
   {
     value: "Professor",
     id: "professor",
@@ -101,9 +101,9 @@ const INITIAL_STATE = {
         name: "Edit",
         action: ({
           id,
+          startHour,
           dayOfWeek,
           endHour,
-          startHour,
           professor: { id: professorId },
          // department: { id: departmentId },
           course: { id: courseId },
@@ -111,8 +111,8 @@ const INITIAL_STATE = {
           setAllocation({
             id,
             dayOfWeek,
-            endHour,
             startHour,
+            endHour,
             professorId,
            // departmentId,
             courseId,
