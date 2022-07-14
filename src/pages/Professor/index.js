@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import Page from "../../components/Page";
@@ -27,6 +27,56 @@ const Professor = () => {
   const [professor, setProfessor] = useState(INITIAL_STATE);
   const [visible, setVisible] = useState(false);
   const [departments, setDepartments] = useState([]);
+
+  function valida(cpf) {
+    try { 
+      if(cpf == "") {
+        alert ("Digite o CPF! \nApenasnúmeros.");
+        return false;
+      } 
+      if(isNaN(cpf)) {
+        alert ("Digite apenas números!");
+        return false;
+      }
+      cpf = String(cpf);
+      if(cpf.length !== 11)  {
+        alert ("Número com tamanho incorreto");
+        return false;
+      }
+      
+  
+    }
+    catch(err) {
+      alert( "Erro " + err);
+    }
+      var Soma;
+      var Resto;
+      Soma = 0;
+      
+    if (cpf == "00000000000") return false;
+  
+    for (let i=1; i<=9; i++) Soma = Soma + parseInt(cpf.substring(i-1, i)) * (11 - i);
+    Resto = (Soma * 10) % 11;
+  
+      if ((Resto == 10) || (Resto == 11))  Resto = 0;
+      if (Resto != parseInt(cpf.substring(9, 10)) ) {
+        alert ("Dígito não confere!")
+        return false;
+      }
+      
+  
+    Soma = 0;
+      for (let i = 1; i <= 10; i++) Soma = Soma + parseInt(cpf.substring(i-1, i)) * (12 - i);
+      Resto = (Soma * 10) % 11;
+  
+      if ((Resto == 10) || (Resto == 11))  Resto = 0;
+      if (Resto != parseInt(cpf.substring(10, 11) ) ) {
+        alert ("Dígito não confere!")
+        return false;
+      }
+      return true;
+  }
+  
 
   useEffect(() => {
     api
@@ -65,6 +115,7 @@ const Professor = () => {
       },
     },
   ];
+  
 
   const handleSave = async (refetch) => {
     const data = {
@@ -72,18 +123,27 @@ const Professor = () => {
       cpf: professor.cpf,
       departmentId: professor.departmentId,
     };
-
+    let validado = false;
+    validado = valida(professor.cpf);
+   
     try {
-      if (professor.id) {
-        await api.put(`${endpoint}/${professor.id}`, data);
 
-        toast.success("Atualizado com sucesso!");
-      } else {
-        await api.post(endpoint, data);
+        if(!validado)
+        throw( "CPF inválido!");
+       
+      
+        if (professor.id) {
+          await api.put(`${endpoint}/${professor.id}`, data);
 
-        toast.success("Professor cadastrado com sucesso!");
-      }
-      setVisible(false);
+          toast.success("Atualizado com sucesso!");
+        } else {
+          await api.post(endpoint, data);
+
+          toast.success("Professor cadastrado com sucesso!");
+        }
+        
+        setVisible(false);
+    
 
       await refetch();
     } catch (error) {
